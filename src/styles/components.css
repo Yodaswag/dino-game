@@ -1,0 +1,4 @@
+/* Components styles */
+.feedback-panel--frustrated { border-color: #ef4444; background-color: #fee2e2; }
+.feedback-panel--bored { border-color: #38bdf8; background-color: #e0f2fe; }
+.feedback-panel--flow { border-color: #10b981; background-color: #d1fae5; }
