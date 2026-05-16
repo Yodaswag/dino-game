@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+*, *::before, *::after {
+  font-family: 'Rubik', sans-serif !important;
+}

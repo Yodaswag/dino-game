@@ -63,7 +63,7 @@ export default function FlowDesignerGame() {
     game.current = createInitialGameState();
     setGaps(2);
     setSpeed(2);
-    setUiState({ skill: 20, challenge: 20, emotion: 'flow', flowTime: 0, badTime: 0, status: 'playing' });
+    setUiState({ skill: 20, challenge: 20, emotion: 'flow', flowTime: 0, badTime: 0, status: 'onboarding' });
 
     const canvas = canvasRef.current;
     if (canvas) {
@@ -88,7 +88,7 @@ export default function FlowDesignerGame() {
       <div className="max-w-4xl mx-auto">
         <header className="mb-6 flex justify-between items-end p-6 rounded-md shadow-xl border-4 border-[#bca07c] relative overflow-hidden" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)', boxShadow: 'inset 0 0 20px rgba(139,69,19,0.3), 0 10px 15px -3px rgba(0,0,0,0.5)' }}>
           <div className="relative z-10 text-center w-full">
-            <h1 className="text-4xl font-black text-[#4a2e1b] flex justify-center items-center gap-3 font-serif drop-shadow-sm">
+            <h1 className="text-4xl font-black text-[#4a2e1b] flex justify-center items-center gap-3 drop-shadow-sm">
               <Anchor className="text-[#8b5a2b] drop-shadow-sm" size={32} /> מסע הפיראט: מעצב זרימה
             </h1>
             <div className="text-[#5c3a21] mt-4 text-lg font-bold flex flex-col items-center gap-3">
@@ -115,7 +115,7 @@ export default function FlowDesignerGame() {
         <div className="rounded-xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] border-[6px] border-[#30180a] overflow-hidden mb-6 relative" style={{ background: 'linear-gradient(to bottom, #5d3a21, #4a2815)' }}>
           <div className="p-5 border-b-[4px] border-[#30180a] flex flex-col gap-2 bg-[#2a160a]/80">
             <div className="w-full">
-              <div className="flex justify-between text-sm font-bold mb-3 px-1 font-serif tracking-wider">
+              <div className="flex justify-between text-sm font-bold mb-3 px-1 tracking-wider">
                 <span className="text-emerald-300 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">זרימה (20 שנ')</span>
                 <span className="text-[#f5ebd9] font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נקודת התחלה</span>
                 <span className="text-red-400 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נטישה (7 שנ')</span>
@@ -142,7 +142,7 @@ export default function FlowDesignerGame() {
             {uiState.status === 'won' && (
               <div className="absolute inset-0 bg-[#f3e5ab]/95 flex items-center justify-center flex-col z-30 border-4 border-[#bca07c]">
                 <div className="text-7xl mb-4 drop-shadow-md">⛵</div>
-                <h2 className="text-5xl font-black text-emerald-700 mb-2 font-serif drop-shadow-sm">ניצחון!</h2>
+                <h2 className="text-5xl font-black text-emerald-700 mb-2  drop-shadow-sm">ניצחון!</h2>
                 <p className="text-[#5c3a21] font-bold text-xl max-w-lg text-center">
                   הצלחת לשמור על איזון מושלם בין האתגר למיומנות לאורך זמן.<br />
                   <b>זהו בדיוק מצב ה-Flow!</b>
@@ -152,10 +152,10 @@ export default function FlowDesignerGame() {
             {uiState.status === 'failed' && (
               <div className="absolute inset-0 bg-[#2a160a]/95 flex flex-col items-center justify-center p-6 text-center z-30 border-t-4 border-red-900">
                 <div className="text-7xl mb-4 drop-shadow-lg opacity-80">⚓</div>
-                <h2 className="text-4xl font-black text-red-500 mb-2 font-serif drop-shadow-md">הפיראט נטש את המסע</h2>
+                <h2 className="text-4xl font-black text-red-500 mb-2  drop-shadow-md">הפיראט נטש את המסע</h2>
                 <p className="text-[#d4a373] font-medium mb-6 text-lg">השחקן שהה יותר מדי זמן בתחושת אי-נוחות.</p>
                 <div className="bg-[#1a0c05] p-5 rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.5)] max-w-xl text-right border-r-4 border-red-600">
-                  <h3 className="font-bold text-red-400 mb-2 font-serif text-xl">תובנה למורים:</h3>
+                  <h3 className="font-bold text-red-400 mb-2  text-xl">תובנה למורים:</h3>
                   <p className="text-base text-[#eaddcf] leading-relaxed">
                     כאשר הלומד מתוסכל או משועמם לאורך זמן, הוא ינטוש את הלמידה. תפקידנו הוא לספק <b>תמיכה (Scaffolding)</b> או <b>העשרה</b> בהתאם.
                   </p>
