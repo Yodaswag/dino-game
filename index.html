@@ -1,0 +1,643 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Pause, RotateCcw, AlertTriangle, Zap, Coffee, Waves, Wind, Anchor } from 'lucide-react';
+
+export default function FlowDesignerGame() {
+const canvasRef = useRef(null);
+const [isPlaying, setIsPlaying] = useState(false);
+const [gaps, setGaps] = useState(2);
+const [speed, setSpeed] = useState(2);
+
+const [uiState, setUiState] = useState({
+skill: 20,
+challenge: 20,
+emotion: 'flow',
+flowTime: 0,
+badTime: 0,
+status: 'playing'
+});
+
+const game = useRef({
+npc: { x: 150, y: 160, vy: 0, isJumping: false, recoveryTimer: 0 },
+platforms: [{ x: 0, w: 800, y: 160, type: 'crate' }],
+floatingTexts: [],
+splashes: [],
+clouds: [
+{ x: 100, y: 30, speed: 0.2, scale: 1 },
+{ x: 400, y: 50, speed: 0.15, scale: 0.8 },
+{ x: 700, y: 20, speed: 0.25, scale: 1.2 }
+],
+skill: 20,
+frame: 0,
+flowFrames: 0,
+badFrames: 0,
+status: 'playing',
+lastGap: 0
+});
+
+const motivationalTexts = [
+"נפלת? קמים!",
+"זה חלק מהלמידה!",
+"לא נורא, נסה שוב!",
+"בים קורים דברים!",
+"ממשיכים קדימה!"
+];
+
+useEffect(() => {
+const canvas = canvasRef.current;
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+let animationId;
+
+const render = () => {
+if (!isPlaying || game.current.status !== 'playing') return;
+
+const g = game.current;
+g.frame++;
+
+const challenge = (gaps * 5) + (speed * 5);
+const diff = challenge - g.skill;
+
+let emotion = 'flow';
+if (diff > 15) {
+emotion = 'frustrated';
+} else if (diff < -15) { emotion='bored' ; } else { emotion='flow' ; } if (emotion==='flow' ) { g.flowFrames++;
+    g.badFrames=Math.max(0, g.badFrames - 1); } else { g.badFrames++; g.flowFrames=Math.max(0, g.flowFrames - 0.5); }
+    g.skill=Math.min(100, g.skill + 0.03); const currentFlowTime=g.flowFrames / 60; ctx.clearRect(0, 0, canvas.width,
+    canvas.height); let skyColor='#e0f2fe' ; if (emotion==='frustrated' || emotion==='bored' ) { skyColor='#fee2e2' ; }
+    else if (emotion==='flow' && currentFlowTime>= 15) {
+    skyColor = '#dcfce7';
+    }
+
+    ctx.fillStyle = skyColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = (emotion === 'frustrated' || emotion === 'bored') ? '#fca5a5' : (emotion === 'flow' &&
+    currentFlowTime >= 15) ? '#86efac' : '#fde047';
+    ctx.beginPath();
+    ctx.arc(700, 50, 30, 0, Math.PI * 2);
+    ctx.fill();
+
+    const currentSpeed = 3 + (speed * 0.6);
+
+    ctx.fillStyle = (emotion === 'frustrated' || emotion === 'bored') ? 'rgba(255,255,255,0.4)' :
+    'rgba(255,255,255,0.8)';
+    for (let c of g.clouds) {
+    c.x -= c.speed * (currentSpeed * 0.5);
+    if (c.x < -100) c.x=canvas.width + 100; ctx.beginPath(); ctx.arc(c.x, c.y, 20 * c.scale, 0, Math.PI * 2);
+        ctx.arc(c.x + 25 * c.scale, c.y - 10 * c.scale, 25 * c.scale, 0, Math.PI * 2); ctx.arc(c.x + 50 * c.scale, c.y,
+        20 * c.scale, 0, Math.PI * 2); ctx.fill(); } if (currentFlowTime>= 10) {
+        const shipProgress = Math.min(1, Math.max(0, (currentFlowTime - 10) / 10));
+        const shipX = canvas.width - (shipProgress * 250);
+
+        ctx.save();
+        ctx.translate(shipX, 150 + Math.sin(g.frame / 20) * 3);
+
+        ctx.fillStyle = '#5c2e0e';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(120, 0);
+        ctx.lineTo(100, 40);
+        ctx.lineTo(20, 40);
+        ctx.fill();
+        ctx.fillStyle = '#3a1c07';
+        ctx.fillRect(40, -80, 6, 80);
+        ctx.fillRect(80, -60, 4, 60);
+        ctx.fillStyle = emotion === 'flow' ? '#f8fafc' : '#cbd5e1';
+        ctx.beginPath();
+        ctx.moveTo(43, -70);
+        ctx.lineTo(10, -20);
+        ctx.lineTo(70, -20);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(82, -50);
+        ctx.lineTo(55, -10);
+        ctx.lineTo(105, -10);
+        ctx.fill();
+        ctx.fillStyle = '#000';
+        ctx.fillRect(46, -80, 20, 15);
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px Arial';
+        ctx.fillText('☠️', 56, -72);
+
+        ctx.restore();
+        }
+
+        let lastPlatform = g.platforms[g.platforms.length - 1];
+        if (lastPlatform.x + lastPlatform.w < canvas.width + 100) { const framesToHitWater=12; const framesInAir=38;
+            const minGap=(currentSpeed * framesToHitWater) + 30; const maxGap=(currentSpeed * framesInAir) - 20; const
+            gapMultiplier=(gaps - 1) / 9; const gapSize=minGap + (gapMultiplier * (maxGap - minGap)) + (Math.random() *
+            20); const platformWidth=80 + Math.random() * (200 - (gaps * 10)); g.platforms.push({ x: lastPlatform.x +
+            lastPlatform.w + gapSize, w: platformWidth, y: 160, type: 'crate' }); } for (let i=g.platforms.length - 1;
+            i>= 0; i--) {
+            let p = g.platforms[i];
+            p.x -= currentSpeed;
+
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(p.x, p.y, p.w, 40);
+            ctx.fillStyle = '#A0522D';
+            ctx.fillRect(p.x, p.y + 5, p.w, 5);
+            ctx.fillRect(p.x, p.y + 20, p.w, 5);
+            ctx.fillRect(p.x, p.y + 35, p.w, 5);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(p.x + 5, p.y + 5, 2, 2);
+            ctx.fillRect(p.x + p.w - 7, p.y + 5, 2, 2);
+
+            if (p.x + p.w < -100) { g.platforms.splice(i, 1); } } ctx.fillStyle='#0284c7' ; ctx.beginPath();
+                ctx.moveTo(0, canvas.height); for (let x=0; x <=canvas.width; x +=10) { let
+                waveHeight=emotion==='frustrated' ? 12 : emotion==='bored' ? 2 : 6; let waveSpeed=emotion==='frustrated'
+                ? 10 : emotion==='bored' ? 30 : 20; let waveY=185 + Math.sin((x / waveSpeed) + (g.frame / 10)) *
+                waveHeight; ctx.lineTo(x, waveY); } ctx.lineTo(canvas.width, canvas.height); ctx.lineTo(0,
+                canvas.height); ctx.fill(); for (let i=g.splashes.length - 1; i>= 0; i--) {
+                let s = g.splashes[i];
+                s.radius += 2.5;
+                s.alpha -= 0.05;
+
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0, s.alpha)})`;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius * 0.5, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(125, 211, 252, ${Math.max(0, s.alpha)})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                if (s.alpha <= 0) g.splashes.splice(i, 1); } let onPlatform=false; for (let p of g.platforms) { if
+                    (g.npc.x + 15> p.x && g.npc.x - 15 < p.x + p.w) { onPlatform=true; break; } } g.npc.y +=g.npc.vy;
+                        g.npc.vy +=0.6; if (onPlatform && g.npc.vy>= 0 && g.npc.y >= 160 && g.npc.y < 180) {
+                            g.npc.y=160; g.npc.vy=0; g.npc.isJumping=false; } else if (g.npc.y> 190) {
+                            g.npc.y = 190;
+                            g.npc.vy = -14;
+                            g.npc.isJumping = true;
+                            g.npc.recoveryTimer = 40;
+
+                            g.splashes.push({ x: g.npc.x, y: 190, radius: 5, alpha: 1 });
+
+                            g.skill = Math.max(0, g.skill - 8);
+                            g.flowFrames = Math.max(0, g.flowFrames - 60);
+
+                            g.floatingTexts.push({
+                            text: motivationalTexts[Math.floor(Math.random() * motivationalTexts.length)],
+                            x: g.npc.x,
+                            y: g.npc.y - 40,
+                            life: 90,
+                            alpha: 1
+                            });
+                            }
+
+                            ctx.font = '32px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+
+                            ctx.save();
+                            ctx.translate(g.npc.x, g.npc.y);
+
+                            if (g.npc.recoveryTimer > 0) {
+                            g.npc.recoveryTimer--;
+                            if (g.npc.recoveryTimer % 10 < 5) { ctx.globalAlpha=0.5; } } if (g.npc.isJumping) {
+                                ctx.rotate((g.npc.vy * 2 * Math.PI) / 180); } ctx.fillStyle='#fed7aa' ; ctx.beginPath();
+                                ctx.arc(0, -2, 14, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle='#ef4444' ;
+                                ctx.beginPath(); ctx.arc(0, -2, 14.5, Math.PI, Math.PI * 2); ctx.fill();
+                                ctx.beginPath(); ctx.moveTo(12, -2); ctx.lineTo(22, 2); ctx.lineTo(14, -8); ctx.fill();
+                                ctx.fillStyle='#171717' ; ctx.beginPath(); ctx.arc(5, 0, 4, 0, Math.PI * 2); ctx.fill();
+                                ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-12, -6); ctx.lineTo(12, 3); ctx.stroke();
+                                if (emotion==='flow' && currentFlowTime>= 15) {
+                                ctx.font = '10px Arial';
+                                ctx.fillText('⭐', -5, 0);
+                                } else if (emotion === 'bored') {
+                                ctx.beginPath();
+                                ctx.moveTo(-8, 0);
+                                ctx.lineTo(-2, 0);
+                                ctx.stroke();
+                                } else {
+                                ctx.fillStyle = '#171717';
+                                ctx.beginPath();
+                                ctx.arc(-5, 0, 2, 0, Math.PI * 2);
+                                ctx.fill();
+                                }
+
+                                ctx.strokeStyle = '#171717';
+                                ctx.lineWidth = 1.5;
+                                ctx.beginPath();
+
+                                if (emotion === 'frustrated') {
+                                ctx.moveTo(-4, 6);
+                                ctx.lineTo(4, 4);
+                                ctx.stroke();
+                                ctx.beginPath();
+                                ctx.moveTo(-9, -4);
+                                ctx.lineTo(-2, -2);
+                                ctx.stroke();
+
+                                ctx.font = '14px Arial';
+                                ctx.fillText('💢', 15, -15);
+                                } else if (emotion === 'bored') {
+                                ctx.arc(0, 6, 2.5, 0, Math.PI * 2);
+                                ctx.stroke();
+                                ctx.fillStyle = '#64748b';
+                                ctx.font = 'bold 12px Arial';
+                                ctx.fillText('Zzz', 18, -15);
+                                } else if (emotion === 'flow' && currentFlowTime >= 15) {
+                                ctx.arc(0, 4, 6, 0.1 * Math.PI, 0.9 * Math.PI);
+                                ctx.stroke();
+                                } else {
+                                ctx.arc(0, 3, 4, 0.1 * Math.PI, 0.9 * Math.PI);
+                                ctx.stroke();
+                                }
+
+                                if (!g.npc.isJumping) {
+                                ctx.fillStyle = '#8B4513';
+                                ctx.fillRect(-18, 12, 36, 6);
+                                ctx.fillStyle = '#A0522D';
+                                ctx.fillRect(-18, 12, 36, 2);
+                                ctx.fillStyle = '#eaddcf';
+                                ctx.fillRect(-12, 12, 2, 6);
+                                ctx.fillRect(10, 12, 2, 6);
+                                }
+                                ctx.restore();
+
+                                for (let i = g.floatingTexts.length - 1; i >= 0; i--) {
+                                let ft = g.floatingTexts[i];
+                                ft.y -= 0.5;
+                                ft.life--;
+                                ft.alpha = ft.life / 60;
+
+                                ctx.fillStyle = `rgba(30, 64, 175, ${Math.min(1, ft.alpha)})`;
+                                ctx.font = 'bold 16px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.fillText(ft.text, ft.x, ft.y);
+
+                                if (ft.life <= 0) { g.floatingTexts.splice(i, 1); } } if (g.frame % 10===0) { const
+                                    flowTimeInSeconds=g.flowFrames / 60; const badTimeInSeconds=g.badFrames / 60; if
+                                    (flowTimeInSeconds>= 20) {
+                                    g.status = 'won';
+                                    } else if (badTimeInSeconds >= 7) {
+                                    g.status = 'failed';
+                                    }
+
+                                    setUiState({
+                                    skill: g.skill,
+                                    challenge: challenge,
+                                    emotion: emotion,
+                                    flowTime: flowTimeInSeconds,
+                                    badTime: badTimeInSeconds,
+                                    status: g.status
+                                    });
+                                    }
+
+                                    animationId = requestAnimationFrame(render);
+                                    };
+
+                                    if (isPlaying) {
+                                    animationId = requestAnimationFrame(render);
+                                    }
+
+                                    return () => cancelAnimationFrame(animationId);
+                                    }, [isPlaying, gaps, speed]);
+
+                                    const handleJump = () => {
+                                    if (!isPlaying || game.current.status !== 'playing') return;
+
+                                    if (!game.current.npc.isJumping || (game.current.npc.vy >= 0 && game.current.npc.y
+                                    >= 150 && game.current.npc.y < 170)) { game.current.npc.vy=-12;
+                                        game.current.npc.isJumping=true; } }; useEffect(()=> {
+                                        const handleKeyDown = (e) => {
+                                        if (e.code === 'Space') {
+                                        e.preventDefault();
+                                        handleJump();
+                                        }
+                                        };
+
+                                        window.addEventListener('keydown', handleKeyDown);
+                                        return () => window.removeEventListener('keydown', handleKeyDown);
+                                        }, [isPlaying]);
+
+                                        const resetGame = () => {
+                                        setIsPlaying(false);
+                                        game.current = {
+                                        npc: { x: 150, y: 160, vy: 0, isJumping: false, recoveryTimer: 0 },
+                                        platforms: [{ x: 0, w: 800, y: 160, type: 'crate' }],
+                                        floatingTexts: [],
+                                        splashes: [],
+                                        clouds: [
+                                        { x: 100, y: 30, speed: 0.2, scale: 1 },
+                                        { x: 400, y: 50, speed: 0.15, scale: 0.8 },
+                                        { x: 700, y: 20, speed: 0.25, scale: 1.2 }
+                                        ],
+                                        skill: 20,
+                                        frame: 0,
+                                        flowFrames: 0,
+                                        badFrames: 0,
+                                        status: 'playing',
+                                        lastGap: 0
+                                        };
+                                        setGaps(2);
+                                        setSpeed(2);
+                                        setUiState({ skill: 20, challenge: 20, emotion: 'flow', flowTime: 0, badTime: 0,
+                                        status: 'playing' });
+
+                                        const canvas = canvasRef.current;
+                                        if (canvas) {
+                                        const ctx = canvas.getContext('2d');
+                                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                        ctx.fillStyle = '#e0f2fe';
+                                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                        ctx.fillStyle = '#0284c7';
+                                        ctx.fillRect(0, 185, canvas.width, 100);
+                                        }
+                                        };
+
+                                        const getEmotionConfig = () => {
+                                        switch (uiState.emotion) {
+                                        case 'frustrated': return { icon:
+                                        <AlertTriangle className="w-8 h-8 text-red-500" />, text: 'מתוסכל', color:
+                                        'text-red-400', msg: 'קשה מדי! הורד מהירות או תדירות פערים.' };
+                                        case 'bored': return { icon:
+                                        <Coffee className="w-8 h-8 text-sky-400" />, text: 'משועמם', color:
+                                        'text-sky-300', msg: 'קל מדי! העלה את האתגר.' };
+                                        case 'flow': return { icon:
+                                        <Zap className="w-8 h-8 text-emerald-400" />, text: 'זרימה (Flow)', color:
+                                        'text-emerald-400', msg: 'איזון מושלם! שמור על זה.' };
+                                        default: return {};
+                                        }
+                                        };
+
+                                        const config = getEmotionConfig();
+
+                                        const flowProgress = Math.min(100, (uiState.flowTime / 20) * 100);
+                                        const badProgress = Math.min(100, (uiState.badTime / 7) * 100);
+
+                                        return (
+                                        // רקע העמוד הכללי
+                                        <div className="min-h-screen p-6 font-sans text-stone-100 bg-[#1c120c]"
+                                            dir="rtl">
+                                            <div className="max-w-4xl mx-auto">
+
+                                                {/* אזור הכותרת - קלף משחק (Parchment) */}
+                                                <header
+                                                    className="mb-6 flex justify-between items-end p-6 rounded-md shadow-xl border-4 border-[#bca07c] relative overflow-hidden"
+                                                    style={{
+                                                    background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)'
+                                                    ,
+                                                    boxShadow: 'inset 0 0 20px rgba(139,69,19,0.3), 0 10px 15px -3px rgba(0,0,0,0.5)'
+                                                    }}>
+                                                    <div className="relative z-10 text-center w-full">
+                                                        <h1
+                                                            className="text-4xl font-black text-[#4a2e1b] flex justify-center items-center gap-3 font-serif drop-shadow-sm">
+                                                            <Anchor className="text-[#8b5a2b] drop-shadow-sm"
+                                                                size={32} /> מסע הפיראט: מעצב זרימה
+                                                        </h1>
+
+                                                        <div
+                                                            className="text-[#5c3a21] mt-4 text-lg font-bold flex flex-col items-center gap-3">
+                                                            <div
+                                                                className="flex items-center gap-1.5 justify-center flex-wrap">
+                                                                שמרו על איזון בין האתגר לבין
+                                                                <div
+                                                                    className="w-4 h-4 rounded-full bg-gradient-to-br from-[#fde047] via-[#eab308] to-[#a16207] border border-[#713f12] shadow-[0_0_5px_rgba(234,179,8,0.6)] flex items-center justify-center relative mx-0.5">
+                                                                    <div
+                                                                        className="absolute w-2.5 h-2.5 rounded-full border border-[#ca8a04] opacity-70">
+                                                                    </div>
+                                                                </div>
+                                                                רמת המיומנות של הפיראט!
+                                                            </div>
+
+                                                            <div
+                                                                className="flex items-center gap-2 justify-center flex-wrap bg-[#4a2e1b]/5 px-4 py-2 rounded-lg border border-[#bca07c]/50">
+                                                                <span
+                                                                    className="bg-[#8b5a2b] text-[#f5ebd9] px-2 py-0.5 rounded-md text-sm font-black shadow-sm tracking-wider">מטרה</span>
+                                                                <span className="text-xl">💰</span>
+                                                                <span className="font-black text-[#4a2e1b]">20 שניות של
+                                                                    FLOW!</span>
+                                                                <span className="text-[#bca07c] mx-2 font-bold">|</span>
+                                                                <span className="text-base font-medium">איך? הקישו
+                                                                    על</span>
+                                                                <kbd
+                                                                    className="bg-[#fdfbf7] border-2 border-[#bca07c] border-b-[4px] rounded-md px-3 py-0.5 text-sm font-black text-[#5c3a21] shadow-sm flex items-center justify-center mx-1 font-sans">
+                                                                    Space
+                                                                </kbd>
+                                                                <span className="text-base font-medium">לקפיצה</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </header>
+
+                                                {/* המסגרת המרכזית - לוח עץ משחקי */}
+                                                <div className="rounded-xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] border-[6px] border-[#30180a] overflow-hidden mb-6 relative"
+                                                    style={{ background: 'linear-gradient(to bottom, #5d3a21, #4a2815)'
+                                                    , }}>
+                                                    {/* קומה עליונה - אזור החיווי (נשארו כאן רק המדדים) */}
+                                                    <div
+                                                        className="p-5 border-b-[4px] border-[#30180a] flex flex-col gap-2 bg-[#2a160a]/80">
+                                                        <div className="w-full">
+                                                            <div
+                                                                className="flex justify-between text-sm font-bold mb-3 px-1 font-serif tracking-wider">
+                                                                <span
+                                                                    className="text-emerald-300 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">זרימה
+                                                                    (20 שנ')</span>
+                                                                <span
+                                                                    className="text-[#f5ebd9] font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נקודת
+                                                                    התחלה</span>
+                                                                <span
+                                                                    className="text-red-400 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-3 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נטישה
+                                                                    (7 שנ')</span>
+                                                            </div>
+
+                                                            <div className="relative w-full bg-[#110804] rounded-full h-6 shadow-[inset_0_3px_6px_rgba(0,0,0,0.8)] border border-[#4a2815] p-0.5"
+                                                                dir="ltr">
+                                                                <div
+                                                                    className="absolute left-1/2 top-0 bottom-0 w-1 bg-[#8b5a2b] z-10 -ml-0.5 shadow-sm">
+                                                                </div>
+                                                                <div className="absolute left-1/2 top-1 bottom-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-r-full transition-all duration-300 shadow-[0_0_10px_rgba(52,211,153,0.3)]"
+                                                                    style={{ width: `calc(${flowProgress / 2}% - 2px)`
+                                                                    }}></div>
+                                                                <div className="absolute right-1/2 top-1 bottom-1 bg-gradient-to-l from-red-600 to-red-500 rounded-l-full transition-all duration-300 shadow-[0_0_10px_rgba(248,113,113,0.3)]"
+                                                                    style={{ width: `calc(${badProgress / 2}% - 2px)`
+                                                                    }}></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* קומה אמצעית - הקאנבס */}
+                                                    <div
+                                                        className="relative w-full bg-sky-100 flex justify-center border-y-4 border-[#1a0c05] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+                                                        <canvas ref={canvasRef} width={800} height={220}
+                                                            className="max-w-full block" />
+
+                                                        {uiState.status === 'won' && (
+                                                        <div
+                                                            className="absolute inset-0 bg-[#f3e5ab]/95 flex items-center justify-center flex-col z-30 border-4 border-[#bca07c]">
+                                                            <div className="text-7xl mb-4 drop-shadow-md">⛵</div>
+                                                            <h2
+                                                                className="text-5xl font-black text-emerald-700 mb-2 font-serif drop-shadow-sm">
+                                                                ניצחון!</h2>
+                                                            <p
+                                                                className="text-[#5c3a21] font-bold text-xl max-w-lg text-center">
+                                                                הצלחת לשמור על איזון מושלם בין האתגר למיומנות לאורך
+                                                                זמן.<br />
+                                                                <b>זהו בדיוק מצב ה-Flow!</b>
+                                                            </p>
+                                                        </div>
+                                                        )}
+
+                                                        {uiState.status === 'failed' && (
+                                                        <div
+                                                            className="absolute inset-0 bg-[#2a160a]/95 flex flex-col items-center justify-center p-6 text-center z-30 border-t-4 border-red-900">
+                                                            <div className="text-7xl mb-4 drop-shadow-lg opacity-80">⚓
+                                                            </div>
+                                                            <h2
+                                                                className="text-4xl font-black text-red-500 mb-2 font-serif drop-shadow-md">
+                                                                הפיראט נטש את המסע</h2>
+                                                            <p className="text-[#d4a373] font-medium mb-6 text-lg">
+                                                                השחקן שהה יותר מדי זמן בתחושת אי-נוחות.
+                                                            </p>
+                                                            <div
+                                                                className="bg-[#1a0c05] p-5 rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.5)] max-w-xl text-right border-r-4 border-red-600">
+                                                                <h3
+                                                                    className="font-bold text-red-400 mb-2 font-serif text-xl">
+                                                                    תובנה למורים:</h3>
+                                                                <p className="text-base text-[#eaddcf] leading-relaxed">
+                                                                    כאשר הלומד מתוסכל או משועמם לאורך זמן, הוא ינטוש את
+                                                                    הלמידה. תפקידנו הוא לספק <b>תמיכה (Scaffolding)</b>
+                                                                    או <b>העשרה</b> בהתאם.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* קומה תחתונה - פאנל השליטה (עץ כהה) */}
+                                                    <div className="p-6 bg-[#2a160a]/90 flex flex-col gap-6">
+
+                                                        {/* שורת המדדים */}
+                                                        <div className="flex flex-col md:flex-row gap-8 items-center">
+                                                            <div
+                                                                className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                                                <div>
+                                                                    <label
+                                                                        className="flex justify-between text-base font-bold mb-3 font-serif text-[#f5ebd9]">
+                                                                        <span className="flex items-center gap-2">
+                                                                            <Waves className="text-sky-400" size={20} />
+                                                                            מרחק בין התיבות
+                                                                        </span>
+                                                                        <span
+                                                                            className="text-amber-400 bg-[#1a0c05] px-2 py-0.5 rounded border border-[#3e1f0f]">{gaps}</span>
+                                                                    </label>
+                                                                    <input type="range" min="1" max="10" value={gaps}
+                                                                        onChange={(e)=> setGaps(Number(e.target.value))}
+                                                                    disabled={uiState.status !== 'playing'}
+                                                                    className="w-full h-4 bg-[#110804] rounded-full
+                                                                    appearance-none cursor-pointer accent-amber-500
+                                                                    disabled:opacity-50 border border-[#4a2815]
+                                                                    shadow-inner"
+                                                                    />
+                                                                </div>
+
+                                                                <div>
+                                                                    <label
+                                                                        className="flex justify-between text-base font-bold mb-3 font-serif text-[#f5ebd9]">
+                                                                        <span className="flex items-center gap-2">
+                                                                            <Wind className="text-sky-400" size={20} />
+                                                                            מהירות זרימת המים
+                                                                        </span>
+                                                                        <span
+                                                                            className="text-amber-400 bg-[#1a0c05] px-2 py-0.5 rounded border border-[#3e1f0f]">{speed}</span>
+                                                                    </label>
+                                                                    <input type="range" min="1" max="10" value={speed}
+                                                                        onChange={(e)=>
+                                                                    setSpeed(Number(e.target.value))}
+                                                                    disabled={uiState.status !== 'playing'}
+                                                                    className="w-full h-4 bg-[#110804] rounded-full
+                                                                    appearance-none cursor-pointer accent-amber-500
+                                                                    disabled:opacity-50 border border-[#4a2815]
+                                                                    shadow-inner"
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex flex-col w-full md:w-1/3">
+                                                                <label
+                                                                    className="flex justify-between text-base font-bold mb-3 font-serif text-[#f5ebd9]">
+                                                                    <span className="flex items-center gap-2">
+                                                                        <div
+                                                                            className="w-4 h-4 rounded-full bg-gradient-to-br from-[#fde047] via-[#eab308] to-[#a16207] border border-[#713f12] shadow-[0_0_5px_rgba(234,179,8,0.6)] flex items-center justify-center relative">
+                                                                            <div
+                                                                                className="absolute w-2.5 h-2.5 rounded-full border border-[#ca8a04] opacity-70">
+                                                                            </div>
+                                                                        </div>
+                                                                        רמת מיומנות
+                                                                    </span>
+                                                                    <span
+                                                                        className="text-amber-400 bg-[#1a0c05] px-2 py-0.5 rounded border border-[#3e1f0f]">{Math.floor(uiState.skill)}%</span>
+                                                                </label>
+                                                                <div className="w-full h-4 bg-[#110804] rounded-full appearance-none border border-[#4a2815] shadow-inner overflow-hidden"
+                                                                    dir="ltr">
+                                                                    <div className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-300 shadow-[0_0_8px_rgba(252,211,77,0.5)]"
+                                                                        style={{ width: `${uiState.skill}%` }}></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* שורת הכפתורים והרגש הנוכחי - מאוחדת */}
+                                                        <div
+                                                            className="flex flex-col md:flex-row justify-between items-center gap-6 pt-4 border-t border-[#4a2815]/50">
+
+                                                            {/* חיווי הרגש הנוכחי - עבר לכאן */}
+                                                            <div
+                                                                className="flex items-center gap-4 w-fit min-w-[280px] bg-[#f4e4c1]/60 border border-[#bca07c] rounded-lg p-3 shadow-md backdrop-blur-md">
+                                                                <div
+                                                                    className="bg-[#1a0c05] p-2 rounded-lg border border-[#4a2815] shadow-inner">
+                                                                    {config.icon}
+                                                                </div>
+                                                                <div>
+                                                                    <span className={`font-black text-2xl block
+                                                                        ${config.color} font-serif
+                                                                        [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]`}>{config.text}</span>
+                                                                    <span
+                                                                        className="text-base text-[#f5ebd9] font-black [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">{config.msg}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* כפתורי הפעלה */}
+                                                            <div className="flex justify-center gap-4">
+                                                                <button onClick={()=> setIsPlaying(!isPlaying)}
+                                                                    disabled={uiState.status !== 'playing'}
+                                                                    className={`flex items-center justify-center gap-2
+                                                                    py-3 px-8 rounded-lg font-bold text-white
+                                                                    transition-all outline-none
+                                                                    ${isPlaying
+                                                                    ? 'bg-gradient-to-b from-[#b45309] to-[#78350f]
+                                                                    border-2 border-[#451a03] shadow-[0_4px_0_#451a03]
+                                                                    active:shadow-none active:translate-y-1'
+                                                                    : 'bg-gradient-to-b from-[#f59e0b] to-[#d97706]
+                                                                    border-2 border-[#78350f] shadow-[0_5px_0_#78350f]
+                                                                    active:shadow-none active:translate-y-1
+                                                                    disabled:opacity-50 disabled:translate-y-1
+                                                                    disabled:shadow-none'
+                                                                    }`}
+                                                                    >
+                                                                    {isPlaying ?
+                                                                    <Pause size={18} className="drop-shadow-md" /> :
+                                                                    <Play size={18} className="drop-shadow-md" />}
+                                                                    <span
+                                                                        className="drop-shadow-md text-base">{isPlaying
+                                                                        ? 'השהה' : 'התחל מסע'}</span>
+                                                                </button>
+
+                                                                <button onClick={resetGame}
+                                                                    className="flex items-center justify-center py-3 px-4 rounded-lg font-bold text-[#f5ebd9] bg-gradient-to-b from-[#4a2815] to-[#30180a] border-2 border-[#1a0c05] hover:from-[#5d3a21] hover:to-[#3e1f0f] transition-all shadow-[0_5px_0_#1a0c05] active:shadow-none active:translate-y-1"
+                                                                    title="איפוס המשחק">
+                                                                    <RotateCcw size={18} />
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        );
+                                        }
