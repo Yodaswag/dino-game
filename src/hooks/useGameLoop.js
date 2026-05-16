@@ -3,7 +3,7 @@ import { updateGameState } from '../game/updateGameState.js';
 import { renderScene } from '../rendering/renderScene.js';
 import { calculateChallenge, classifyEmotion, shouldHoldPreviousEmotion } from '../game/difficultyModel.js';
 
-export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiState, uiState, assets }) {
+export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiState, uiState, assets, gameplayWidth = 800 }) {
   const prevControls = useRef({ gaps, speed });
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiStat
       }
       g.skill = Math.min(100, g.skill + 0.03);
 
-      updateGameState({ game: g, gaps, speed, emotion, challenge, canvasWidth: canvas.width });
+      updateGameState({ game: g, gaps, speed, emotion, challenge, canvasWidth: gameplayWidth });
 
       if (g.frame % 10 === 0) {
         setUiState(prev => ({
@@ -77,5 +77,5 @@ export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiStat
     }
 
     return () => cancelAnimationFrame(animationId);
-  }, [isPlaying, gaps, speed, game, setUiState, uiState, assets]);
+  }, [isPlaying, gaps, speed, game, setUiState, uiState, assets, gameplayWidth]);
 }

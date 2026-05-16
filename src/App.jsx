@@ -35,7 +35,7 @@ export default function FlowDesignerGame() {
     });
   }, []);
 
-  useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiState, uiState, assets });
+  useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiState, uiState, assets, gameplayWidth: 800 });
 
   const handleJump = () => {
     if (!isPlaying || game.current.status !== 'playing') return;
@@ -69,10 +69,6 @@ export default function FlowDesignerGame() {
     if (canvas) {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#e0f2fe';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#0284c7';
-      ctx.fillRect(0, 185, canvas.width, 100);
     }
   };
 
@@ -128,8 +124,8 @@ export default function FlowDesignerGame() {
             </div>
           </div>
 
-          <div className="relative w-full bg-sky-100 flex justify-center border-y-4 border-[#1a0c05] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
-            <canvas ref={canvasRef} width={800} height={220} className="max-w-full block" />
+          <div className="game-stage-shell border-y-4 border-[#1a0c05] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+            <canvas ref={canvasRef} width={1280} height={720} className="game-stage-canvas" />
             {uiState.status === 'onboarding' && (
               <OnboardingModal 
                 onStart={() => {

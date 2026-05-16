@@ -1,1 +1,15 @@
 /* Layout styles */
+
+.game-stage-shell {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #FEFCF8;
+}
+
+.game-stage-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

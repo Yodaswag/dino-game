@@ -86,7 +86,7 @@ paper texture sky
 - Create: `src/rendering/sceneLayout.js`
 - Create: `src/rendering/sceneLayout.test.js`
 
-- [ ] **Step 1: Write failing tests for stage sizing, state selection, and aspect-ratio fitting**
+- [x] **Step 1: Write failing tests for stage sizing, state selection, and aspect-ratio fitting**
 
 ```js
 import { describe, expect, it } from 'vitest';
@@ -132,13 +132,13 @@ describe('sceneLayout', () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and confirm it fails**
+- [x] **Step 2: Run the focused test and confirm it fails**
 
 Run: `npm test -- src/rendering/sceneLayout.test.js`
 
 Expected: FAIL because `sceneLayout.js` does not exist.
 
-- [ ] **Step 3: Implement the helper module**
+- [x] **Step 3: Implement the helper module**
 
 ```js
 export const SCENE_SIZE = { width: 1280, height: 720 };
@@ -188,13 +188,13 @@ export function getSceneLayout(assets) {
 }
 ```
 
-- [ ] **Step 4: Re-run focused test**
+- [x] **Step 4: Re-run focused test**
 
 Run: `npm test -- src/rendering/sceneLayout.test.js`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/rendering/sceneLayout.js src/rendering/sceneLayout.test.js
@@ -207,7 +207,7 @@ git commit -m "test: define concept scene layout contract"
 - Modify: `src/rendering/renderScene.js`
 - Test: `src/rendering/sceneLayout.test.js`
 
-- [ ] **Step 1: Extend helper test with explicit asset-state intent**
+- [x] **Step 1: Extend helper test with explicit asset-state intent**
 
 ```js
 it('uses neutral indicator art outside active emotional states', () => {
@@ -216,13 +216,13 @@ it('uses neutral indicator art outside active emotional states', () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test**
+- [x] **Step 2: Run the focused test**
 
 Run: `npm test -- src/rendering/sceneLayout.test.js`
 
 Expected: PASS before renderer change, proving helper contract stable.
 
-- [ ] **Step 3: Replace compressed draw logic with concept layer order**
+- [x] **Step 3: Replace compressed draw logic with concept layer order**
 
 ```js
 import {
@@ -311,17 +311,17 @@ Continue same function with:
 }
 ```
 
-- [ ] **Step 4: Preserve existing splash/text loops after restoring scene coordinates**
+- [x] **Step 4: Preserve existing splash/text loops after restoring scene coordinates**
 
 Keep current effects, but scale their coordinates through the same scene transform before restore or convert them to scene-space positions so effects stay aligned after resize.
 
-- [ ] **Step 5: Run renderer-adjacent tests**
+- [x] **Step 5: Run renderer-adjacent tests**
 
 Run: `npm test -- src/rendering/sceneLayout.test.js`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/rendering/renderScene.js src/rendering/sceneLayout.test.js
@@ -334,13 +334,13 @@ git commit -m "feat: render concept-aligned flow scene"
 - Modify: `src/App.jsx`
 - Modify: `src/styles/layout.css`
 
-- [ ] **Step 1: Add a real layout stylesheet import**
+- [x] **Step 1: Add a real layout stylesheet import**
 
 ```js
 import './styles/layout.css';
 ```
 
-- [ ] **Step 2: Wrap canvas in a responsive stage shell**
+- [x] **Step 2: Wrap canvas in a responsive stage shell**
 
 ```jsx
 <div className="game-stage-shell">
@@ -349,7 +349,7 @@ import './styles/layout.css';
 </div>
 ```
 
-- [ ] **Step 3: Replace width-constraining canvas classes**
+- [x] **Step 3: Replace width-constraining canvas classes**
 
 ```css
 .game-stage-shell {
@@ -367,7 +367,7 @@ import './styles/layout.css';
 }
 ```
 
-- [ ] **Step 4: Keep reset clear logic aligned with new stage size**
+- [x] **Step 4: Keep reset clear logic aligned with new stage size**
 
 ```js
 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -375,7 +375,7 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 Do not repaint old hard-coded shallow bands during reset; next render frame should redraw the full scene.
 
-- [ ] **Step 5: Manual verify the scene now spans the card**
+- [x] **Step 5: Manual verify the scene now spans the card**
 
 Run: `npm run dev`
 
@@ -387,7 +387,7 @@ Expected:
 - onboarding overlay still covers full scene bounds
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/App.jsx src/styles/layout.css
@@ -400,19 +400,19 @@ git commit -m "feat: expand game stage to full width"
 - Test: `src/rendering/sceneLayout.test.js`
 - Manual verify: browser
 
-- [ ] **Step 1: Run full automated verification**
+- [x] **Step 1: Run full automated verification**
 
 Run: `npm test`
 
 Expected: PASS.
 
-- [ ] **Step 2: Run production build**
+- [x] **Step 2: Run production build**
 
 Run: `npm run build`
 
 Expected: exit code `0`.
 
-- [ ] **Step 3: Manual visual pass**
+- [x] **Step 3: Manual visual pass**
 
 Check:
 
@@ -425,7 +425,7 @@ Check:
 - ship/pirate stay in concept-like proportions
 ```
 
-- [ ] **Step 4: Responsive pass**
+- [x] **Step 4: Responsive pass**
 
 Check:
 
@@ -435,7 +435,7 @@ Check:
 - overlays remain aligned to scene bounds
 ```
 
-- [ ] **Step 5: Commit any verification fixes**
+- [x] **Step 5: Commit any verification fixes**
 
 ```bash
 git add src
