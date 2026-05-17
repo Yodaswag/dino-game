@@ -6,4 +6,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: '/dino-game/',
   plugins: [react(), tailwindcss()],
+  build: {
+    outDir: 'docs',
+    emptyOutDir: true
+  }
 })
