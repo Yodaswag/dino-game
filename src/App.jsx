@@ -82,31 +82,7 @@ export default function FlowDesignerGame() {
   return (
     <div className="min-h-screen p-6 font-sans text-stone-100 bg-[#1c120c]" dir="rtl">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-6 flex justify-between items-end p-6 rounded-md shadow-xl border-4 border-[#bca07c] relative overflow-hidden" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)', boxShadow: 'inset 0 0 20px rgba(139,69,19,0.3), 0 10px 15px -3px rgba(0,0,0,0.5)' }}>
-          <div className="relative z-10 text-center w-full">
-            <h1 className="text-4xl font-black text-[#4a2e1b] flex justify-center items-center gap-3 drop-shadow-sm">
-              <Anchor className="text-[#8b5a2b] drop-shadow-sm" size={32} /> מסע הפיראט: מעצב זרימה
-            </h1>
-            <div className="text-[#5c3a21] mt-4 text-lg font-bold flex flex-col items-center gap-3">
-              <div className="flex items-center gap-1.5 justify-center flex-wrap">
-                שמרו על איזון בין האתגר לבין
-                <div className="w-4 h-4 rounded-full bg-gradient-to-br from-[#fde047] via-[#eab308] to-[#a16207] border border-[#713f12] shadow-[0_0_5px_rgba(234,179,8,0.6)] flex items-center justify-center relative mx-0.5">
-                  <div className="absolute w-2.5 h-2.5 rounded-full border border-[#ca8a04] opacity-70"></div>
-                </div>
-                רמת המיומנות של הפיראט!
-              </div>
-              <div className="flex items-center gap-2 justify-center flex-wrap bg-[#4a2e1b]/5 px-4 py-2 rounded-lg border border-[#bca07c]/50">
-                <span className="bg-[#8b5a2b] text-[#f5ebd9] px-2 py-0.5 rounded-md text-sm font-black shadow-sm tracking-wider">מטרה</span>
-                <span className="text-xl">💰</span>
-                <span className="font-black text-[#4a2e1b]">20 שניות של FLOW!</span>
-                <span className="text-[#bca07c] mx-2 font-bold">|</span>
-                <span className="text-base font-medium">איך? הקישו על</span>
-                <kbd className="bg-[#fdfbf7] border-2 border-[#bca07c] border-b-[4px] rounded-md px-3 py-0.5 text-sm font-black text-[#5c3a21] shadow-sm flex items-center justify-center mx-1 font-sans">Space</kbd>
-                <span className="text-base font-medium">לקפיצה</span>
-              </div>
-            </div>
-          </div>
-        </header>
+
 
         <div className="rounded-xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] border-[6px] border-[#30180a] overflow-hidden mb-6 relative" style={{ background: 'linear-gradient(to bottom, #5d3a21, #4a2815)' }}>
           <div className="p-5 border-b-[4px] border-[#30180a] flex flex-col gap-2 bg-[#2a160a]/80">
