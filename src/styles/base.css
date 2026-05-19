@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
 *, *::before, *::after {
-  font-family: 'Rubik', sans-serif !important;
+  font-family: 'Rubik', sans-serif;
+}
+
+.font-aloja {
+  font-family: 'Aloja', 'Rubik', sans-serif !important;
+  color: #264f73 !important;
 }

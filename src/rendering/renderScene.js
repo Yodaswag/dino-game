@@ -141,8 +141,8 @@ export function renderScene({ ctx, canvas, gameState, uiState, assets }) {
     ctx.save();
     ctx.translate(pirateCenterX, pirateCenterY);
 
-    if (npc.recoveryTimer > 0 && npc.recoveryTimer % 10 < 5) {
-      ctx.globalAlpha = 0.5;
+    if (npc.recoveryTimer > 0 && Math.floor(frame / 4) % 2 === 0) {
+      ctx.globalAlpha = 0.3;
     }
 
     if (npc.isJumping) {

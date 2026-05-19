@@ -1,9 +1,13 @@
-import { FLOW_WIN_SECONDS, BAD_FAIL_SECONDS } from './constants.js';
+import { FLOW_WIN_SECONDS, BAD_FAIL_SECONDS, LEARNING_BONUS } from './constants.js';
 
 export function updateGameState({ game, gaps, speed, emotion, challenge, canvasWidth }) {
   game.frame++;
 
-  const currentSpeed = 3 + (speed * 0.6);
+  let effectiveSpeed = speed;
+  if (game.npc && game.npc.recoveryTimer > 0) {
+    effectiveSpeed = 1;
+  }
+  const currentSpeed = 3 + (effectiveSpeed * 0.6);
 
   // Update clouds
   for (let c of game.clouds) {
@@ -14,13 +18,21 @@ export function updateGameState({ game, gaps, speed, emotion, challenge, canvasW
   // Update platforms
   let lastPlatform = game.platforms[game.platforms.length - 1];
   if (lastPlatform.x + lastPlatform.w < canvasWidth + 100) {
-    const framesToHitWater = 12;
-    const framesInAir = 38;
-    const minGap = (currentSpeed * framesToHitWater) + 30;
-    const maxGap = (currentSpeed * framesInAir) - 20;
-    const gapMultiplier = (gaps - 1) / 9;
-    const gapSize = minGap + (gapMultiplier * (maxGap - minGap)) + (Math.random() * 20);
-    const platformWidth = 80 + Math.random() * (200 - (gaps * 10));
+    let gapSize;
+    let platformWidth;
+    if (game.forceSafePlatform) {
+      gapSize = 120;
+      platformWidth = 350;
+      game.forceSafePlatform = false;
+    } else {
+      const framesToHitWater = 12;
+      const framesInAir = 38;
+      const minGap = (currentSpeed * framesToHitWater) + 30;
+      const maxGap = (currentSpeed * framesInAir) - 20;
+      const gapMultiplier = (gaps - 1) / 9;
+      gapSize = minGap + (gapMultiplier * (maxGap - minGap)) + (Math.random() * 20);
+      platformWidth = 80 + Math.random() * (200 - (gaps * 10));
+    }
     game.platforms.push({ x: lastPlatform.x + lastPlatform.w + gapSize, w: platformWidth, y: 160, type: 'crate' });
   }
 
@@ -65,7 +77,9 @@ export function updateGameState({ game, gaps, speed, emotion, challenge, canvasW
     game.falls.push(Date.now());
     game.splashes.push({ x: game.npc.x, y: 190, radius: 5, alpha: 1 });
 
-    game.skill = Math.max(0, game.skill - 8);
+    // Positive reinforcement instead of penalty, and trigger safety scaffolding.
+    game.skill = Math.min(100, game.skill + LEARNING_BONUS);
+    game.forceSafePlatform = true;
     game.flowFrames = Math.max(0, game.flowFrames - 60);
 
     const motivationalTexts = ["נפלת? קמים!", "זה חלק מהלמידה!", "לא נורא, נסה שוב!", "בים קורים דברים!", "ממשיכים קדימה!"];

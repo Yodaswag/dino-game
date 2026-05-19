@@ -19,5 +19,7 @@ export function createInitialGameState() {
     falls: [],
     lastAdjustmentTime: 0,
     stableSuccessSeconds: 0,
+    framesOutsideFlow: 0,
+    forceSafePlatform: false,
   };
 }

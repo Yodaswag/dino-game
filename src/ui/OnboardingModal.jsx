@@ -6,8 +6,8 @@ export function OnboardingModal({ onStart }) {
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-3" dir="rtl">
       <div className="bg-[#f4e4c1] border-4 border-[#bca07c] rounded-xl p-5 max-w-xl w-full text-center shadow-2xl relative overflow-hidden" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)', boxShadow: 'inset 0 0 20px rgba(139,69,19,0.3), 0 20px 25px -5px rgba(0,0,0,0.5)' }}>
         <div className="relative z-10 text-center w-full">
-          <h1 className="text-3xl font-black text-[#4a2e1b] flex justify-center items-center gap-3 drop-shadow-sm mb-4">
-            <Anchor className="text-[#8b5a2b] drop-shadow-sm" size={30} /> מסע הפיראט: מעצב זרימה
+          <h1 className="text-4xl font-black flex justify-center items-center gap-3 drop-shadow-sm mb-4" style={{ fontFamily: 'Aloja, Rubik, sans-serif', color: '#264f73' }}>
+            <Anchor className="text-[#264f73] drop-shadow-sm" size={30} /> THE FLOWING TIDE
           </h1>
 
           <div className="text-[#5c3a21] mb-5 text-base font-bold flex flex-col items-center gap-3 bg-white/30 p-4 rounded-lg border border-[#bca07c]/50">
