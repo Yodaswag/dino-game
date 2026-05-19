@@ -107,4 +107,4 @@ Export a new utility function `calculateSkillGrowthRate({ framesOutsideFlow })` 
 
 
    ### Final step
-   Commit and push to github, wait 3 minutes and check that https://github.com/Yodaswag/dino-game updated properly. Ensure the user they can roll back and make further edits if needed.
+   Commit and push to github, wait 3 minutes and check that https://yodaswag.github.io/dino-game/ updated properly. Ensure the user they can roll back and make further edits if needed.
