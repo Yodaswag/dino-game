@@ -9,6 +9,23 @@ export function updateGameState({ game, gaps, speed, emotion, challenge, canvasW
   }
   const currentSpeed = 3 + (effectiveSpeed * 0.6);
 
+  // Autopilot jumping execution
+  if (game.isAutopilotEnabled && !game.npc.isJumping && game.npc.recoveryTimer === 0) {
+    const currentPlatform = game.platforms.find(p => 
+      game.npc.x + 15 > p.x && game.npc.x - 15 < p.x + p.w
+    );
+    if (currentPlatform) {
+      const platformEnd = currentPlatform.x + currentPlatform.w;
+      const distanceToEnd = platformEnd - game.npc.x;
+      const jumpThreshold = Math.max(30, currentSpeed * 3);
+
+      if (distanceToEnd <= jumpThreshold) {
+        game.npc.vy = -12;
+        game.npc.isJumping = true;
+      }
+    }
+  }
+
   // Update clouds
   for (let c of game.clouds) {
     c.x -= c.speed * (currentSpeed * 0.5);
