@@ -47,7 +47,7 @@ export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiStat
         const recentFalls = g.falls.length;
         const stableSuccessSeconds = (now - (g.falls[g.falls.length - 1] || 0)) / 1000;
 
-        const newEmotion = classifyEmotion({ delta: diff, recentFalls, stableSuccessSeconds });
+        const newEmotion = classifyEmotion({ delta: diff, recentFalls, stableSuccessSeconds, framesSinceLastJump: g.framesSinceLastJump });
         const hold = shouldHoldPreviousEmotion({ msSinceAdjustment: now - g.lastAdjustmentTime });
 
         if (!g.currentEmotion) g.currentEmotion = 'flow';
@@ -68,7 +68,7 @@ export function useGameLoop({ canvasRef, isPlaying, gaps, speed, game, setUiStat
         }
 
         // Apply dynamic skill growth rate based on time spent outside flow
-        const currentGrowthRate = calculateSkillGrowthRate({ framesOutsideFlow: g.framesOutsideFlow });
+        const currentGrowthRate = calculateSkillGrowthRate({ framesOutsideFlow: g.framesOutsideFlow, framesSinceLastJump: g.framesSinceLastJump });
         g.skill = Math.min(100, g.skill + currentGrowthRate);
 
         updateGameState({ game: g, gaps, speed, emotion, challenge, canvasWidth: gameplayWidth });

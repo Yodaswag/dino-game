@@ -2,20 +2,23 @@ import React from 'react';
 
 export function SkillProgress({ skill }) {
   return (
-    <div className="flex flex-col w-full">
-      <label className="flex justify-between text-base font-bold mb-3 font-serif text-[#f5ebd9]">
-        <span className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-[#fde047] via-[#eab308] to-[#a16207] border border-[#713f12] shadow-[0_0_5px_rgba(234,179,8,0.6)] flex items-center justify-center relative">
-            <div className="absolute w-2.5 h-2.5 rounded-full border border-[#ca8a04] opacity-70"></div>
-          </div>
-          רמת מיומנות הפיראט
-        </span>
-        <span className="text-amber-400 bg-[#1a0c05] px-2 py-0.5 rounded border border-[#3e1f0f]">{Math.floor(skill)}%</span>
+    <div
+      className="flex flex-col w-full h-full px-5 py-5 gap-4 rounded-lg border border-[#1462A6]/20 text-right justify-between"
+      dir="rtl"
+      style={{
+        backgroundImage: "url('/dino-game/assets/images/flow-game/texture.png')",
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto'
+      }}
+    >
+      <label className="flex flex-row-reverse items-center justify-between gap-3 text-base font-bold font-serif text-[#241819] text-right">
+        <span className="font-black leading-tight">רמת מיומנות הפיראט</span>
+        <span className="text-[#FEFCF8] bg-[#1462A6] px-3 py-1 rounded-md border border-[#1462A6] font-bold shadow-sm shrink-0">{Math.floor(skill)}%</span>
       </label>
-      <div className="w-full h-4 bg-[#110804] rounded-full appearance-none border border-[#4a2815] shadow-inner overflow-hidden" dir="ltr">
-        <div className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-300 shadow-[0_0_8px_rgba(252,211,77,0.5)]" style={{ width: `${skill}%` }}></div>
+      <div className="w-full h-4 bg-[#DEE4E4] rounded-full appearance-none border border-[#368ABF]/30 shadow-inner overflow-hidden" dir="ltr">
+        <div className="bg-gradient-to-r from-[#1462A6] to-[#368ABF] h-full transition-all duration-300 shadow-sm" style={{ width: `${skill}%` }}></div>
       </div>
-      <p className="text-xs text-[#d4a373] mt-2 font-medium">המיומנות עולה ככל שהמשחק נמשך, ויורדת כאשר נכשלים.</p>
+      <p className="text-xs text-[#241819]/80 font-medium text-right leading-relaxed">המיומנות עולה ככל שהמשחק נמשך, ויורדת כאשר נכשלים.</p>
     </div>
   );
 }

@@ -59,6 +59,7 @@ export default function FlowDesignerGame() {
     if (!game.current.npc.isJumping || (game.current.npc.vy >= 0 && game.current.npc.y >= 150 && game.current.npc.y < 170)) {
       game.current.npc.vy = -12;
       game.current.npc.isJumping = true;
+      game.current.framesSinceLastJump = 0;
     }
   };
 
@@ -109,25 +110,36 @@ export default function FlowDesignerGame() {
   }
 
   return (
-    <div className="min-h-full p-3 font-sans text-stone-100 bg-[#1c120c]" dir="rtl">
+    <div
+      className="min-h-full p-3 font-sans text-[#241819] transition-colors duration-300"
+      dir="rtl"
+      style={{
+        backgroundColor: '#241819',
+        backgroundImage: "url('/dino-game/assets/images/flow-game/texture.png')",
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto'
+      }}
+    >
       <div className="max-w-[780px] mx-auto">
-        <div className="rounded-xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] border-[6px] border-[#30180a] overflow-hidden mb-4 relative" style={{ background: 'linear-gradient(to bottom, #5d3a21, #4a2815)' }}>
-          <div className="p-3 border-b-[4px] border-[#30180a] flex flex-col gap-2 bg-[#2a160a]/80">
+        <div className="rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-[6px] border-[#1462A6] overflow-hidden mb-4 relative bg-[#241819] transition-all">
+          <div
+            className="p-4 border-b-[4px] border-[#1462A6] flex flex-col gap-2 bg-[#FEFCF8]"
+          >
             <div className="w-full">
-              <div className="flex justify-between text-xs font-bold mb-2 px-1 tracking-wider">
-                <span className="text-emerald-300 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">זרימה (20 שנ')</span>
-                <span className="text-[#f5ebd9] font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נקודת התחלה</span>
-                <span className="text-red-400 font-black bg-[#f4e4c1]/60 border border-[#bca07c] px-2.5 py-1 rounded-md shadow-sm backdrop-blur-md [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]">נטישה (7 שנ')</span>
+              <div className="flex flex-row-reverse justify-between text-xs font-black mb-3 px-1 tracking-wide text-right">
+                <span className="text-[#FEFCF8] bg-[#1462A6] border border-[#1462A6] px-3 py-1.5 rounded-lg shadow-sm font-sans tracking-wide">זרימה (20 שנ')</span>
+                <span className="text-[#241819] bg-[#F2DC99] border border-[#e0c482] px-3 py-1.5 rounded-lg shadow-sm font-sans tracking-wide">נקודת התחלה</span>
+                <span className="text-[#FEFCF8] bg-[#BF3F4A] border border-[#BF3F4A] px-3 py-1.5 rounded-lg shadow-sm font-sans tracking-wide">נטישה (7 שנ')</span>
               </div>
-              <div className="relative w-full bg-[#110804] rounded-full h-5 shadow-[inset_0_3px_6px_rgba(0,0,0,0.8)] border border-[#4a2815] p-0.5" dir="ltr">
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-[#8b5a2b] z-10 -ml-0.5 shadow-sm"></div>
-                <div className="absolute left-1/2 top-1 bottom-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-r-full transition-all duration-300 shadow-[0_0_10px_rgba(52,211,153,0.3)]" style={{ width: `calc(${flowProgress / 2}% - 2px)` }}></div>
-                <div className="absolute right-1/2 top-1 bottom-1 bg-gradient-to-l from-red-600 to-red-500 rounded-l-full transition-all duration-300 shadow-[0_0_10px_rgba(248,113,113,0.3)]" style={{ width: `calc(${badProgress / 2}% - 2px)` }}></div>
+              <div className="relative w-full bg-[#DEE4E4] rounded-full h-5 border border-[#368ABF]/30 p-0.5 shadow-inner" dir="ltr">
+                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-[#1462A6] z-10 -ml-0.5 shadow-sm"></div>
+                <div className="absolute left-1/2 top-1 bottom-1 bg-gradient-to-r from-[#1462A6] to-[#368ABF] rounded-r-full transition-all duration-300 shadow-[0_0_10px_rgba(20,98,166,0.3)]" style={{ width: `calc(${flowProgress / 2}% - 2px)` }}></div>
+                <div className="absolute right-1/2 top-1 bottom-1 bg-gradient-to-l from-[#E69881] to-[#BF3F4A] rounded-l-full transition-all duration-300 shadow-[0_0_10px_rgba(191,63,74,0.3)]" style={{ width: `calc(${badProgress / 2}% - 2px)` }}></div>
               </div>
             </div>
           </div>
 
-          <div className="game-stage-shell border-y-4 border-[#1a0c05] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+          <div className="game-stage-shell border-y-[4px] border-[#1462A6] shadow-[inset_0_0_30px_rgba(0,0,0,0.6)] bg-[#FEFCF8]">
             <canvas ref={canvasRef} width={1280} height={720} className="game-stage-canvas" />
             {uiState.status === 'onboarding' && (
               <OnboardingModal
@@ -139,37 +151,54 @@ export default function FlowDesignerGame() {
               />
             )}
             {uiState.status === 'won' && (
-              <div className="absolute inset-0 bg-[#f3e5ab]/95 flex items-center justify-center flex-col z-30 border-4 border-[#bca07c] p-4">
-                <div className="text-6xl mb-3 drop-shadow-md">⛵</div>
-                <h2 className="text-4xl font-black text-emerald-700 mb-2 drop-shadow-sm">ניצחון!</h2>
-                <p className="text-[#5c3a21] font-bold text-lg max-w-lg text-center">
+              <div
+                className="absolute inset-0 flex items-center justify-center flex-col z-30 border-4 border-[#1462A6] p-6 text-center animate-fade-in animate-duration-500 bg-[#FEFCF8]"
+              >
+                <div className="text-7xl mb-4 animate-bounce drop-shadow-md">⛵</div>
+                <h2 className="text-5xl font-black text-[#1462A6] mb-3 drop-shadow-sm font-aloja">ניצחון מוחלט!</h2>
+                <p className="text-[#241819] font-black text-xl max-w-lg leading-relaxed bg-[#FEFCF8]/40 p-5 rounded-xl border border-[#368ABF]/20 backdrop-blur-sm shadow-inner text-right">
                   הצלחת לשמור על איזון מושלם בין האתגר למיומנות לאורך זמן.
                   <br />
-                  <b>זהו בדיוק מצב ה-Flow!</b>
+                  <span className="text-[#1462A6] font-extrabold text-2xl mt-2 block text-center">זהו בדיוק מצב ה-Flow!</span>
                 </p>
               </div>
             )}
             {uiState.status === 'failed' && (
-              <div className="absolute inset-0 bg-[#2a160a]/95 flex flex-col items-center justify-center p-4 text-center z-30 border-t-4 border-red-900 overflow-y-auto">
-                <div className="text-6xl mb-3 drop-shadow-lg opacity-80">⚓</div>
-                <h2 className="text-3xl font-black text-red-500 mb-2 drop-shadow-md">הפיראט נטש את המסע</h2>
-                <p className="text-[#d4a373] font-medium mb-4 text-base font-bold">השחקן שהה יותר מדי זמן בתחושת אי-נוחות (שעמום או תסכול).</p>
-                <div className="bg-[#1a0c05] p-4 rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.5)] max-w-xl text-right border-r-4 border-red-600 mb-4">
-                  <h3 className="font-bold text-red-400 mb-2 text-lg">תובנה למורים:</h3>
-                  <p className="text-sm text-[#eaddcf] leading-relaxed">
-                    כאשר הלומד מתוסכל או משועמם לאורך זמן, הוא ינטוש את הלמידה. תפקידנו הוא לספק <b>תמיכה (Scaffolding)</b> או <b>העשרה</b> בהתאם.
-                  </p>
-                </div>
-
-                <div className="mt-2 bg-[#3e1f0f] border-2 border-amber-600/50 p-4 rounded-lg shadow-inner max-w-xl text-center flex flex-col items-center gap-3">
-                  <div className="flex items-center gap-2 text-amber-300 font-bold text-base">
-                    <Bot size={22} className="animate-pulse" />
-                    <span>צריכים עזרה במסע? סיוע בטייס אוטומטי! 🤖</span>
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-30 border-t-[6px] border-[#BF3F4A] animate-fade-in bg-[#FEFCF8]"
+              >
+                <h2 className="text-2xl font-black text-[#BF3F4A] mb-1 drop-shadow-sm font-aloja flex items-center justify-center gap-2">
+                  <span className="animate-pulse">⚓</span> הפיראט נטש את המסע
+                </h2>
+                <p className="text-[#241819] font-black mb-3 text-xs md:text-sm text-right">השחקן שהה יותר מדי זמן בתחושת אי-נוחות (שעמום או תסכול).</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-[700px] text-right">
+                  {/* Teacher Insight Column */}
+                  <div className="bg-[#BF3F4A]/5 p-3 rounded-xl border border-[#BF3F4A]/20 flex flex-col justify-between backdrop-blur-sm">
+                    <div>
+                      <h3 className="font-black text-[#BF3F4A] mb-1 text-xs md:text-sm">💡 תובנה פדגוגית למורים:</h3>
+                      <p className="text-[11px] md:text-xs text-[#241819] font-bold leading-relaxed text-right">
+                        כאשר הלומד מתוסכל או משועמם לאורך זמן, הוא ינטוש את הלמידה. תפקידנו כמורים הוא לזהות זאת ולספק <b className="text-[#1462A6]">פיגומים ותמיכה (Scaffolding)</b> או <b className="text-[#BF3F4A]">העשרה</b> בהתאם לרמתו האישית.
+                      </p>
+                    </div>
+                    <button
+                      onClick={resetGame}
+                      className="mt-2.5 w-full bg-gradient-to-b from-[#FEFCF8] to-[#DEE4E4] hover:from-[#fff] hover:to-[#cfd7d7] text-[#241819] font-black py-2 rounded-lg border border-[#b5bebe] shadow-sm text-xs cursor-pointer transition-all active:translate-y-0.5"
+                    >
+                      נסה שוב בעצמך 🏃‍♂️
+                    </button>
                   </div>
-                  <p className="text-xs text-[#eaddcf] leading-relaxed max-w-md">
-                    כדי להקל על ההתנסות ולמנוע תסכול או שעמום, אנו מציעים להפעיל את הטייס האוטומטי. הדבר יאפשר לכם להתרכז בכיוונון הסליידר (מהירות זרימת המים) כדי להתאים את רמת הקושי בדיוק לרמה שלכם או של התלמידים שלכם.
-                  </p>
-                  <div className="flex gap-3">
+
+                  {/* Autopilot Column */}
+                  <div className="bg-[#1462A6]/5 p-3 rounded-xl border border-[#1462A6]/20 flex flex-col justify-between items-center backdrop-blur-sm">
+                    <div>
+                      <h3 className="font-black text-[#1462A6] mb-1 text-xs md:text-sm flex flex-row-reverse items-center gap-1.5 justify-center">
+                        <Bot size={16} className="animate-pulse" /> סיוע בטייס אוטומטי
+                      </h3>
+                      <p className="text-[11px] md:text-xs text-[#241819]/90 font-bold leading-relaxed text-right">
+                        כדי למנוע תסכול או שעמום, אנו מציעים להפעיל את הטייס האוטומטי. הדבר יאפשר לכם להתרכז <b>במאה אחוז</b> בכיוונון הסליידר (מהירות זרימת המים) והתאמת הקושי בדיוק לרמה שלכם או של תלמידיכם.
+                      </p>
+                    </div>
                     <button
                       onClick={() => {
                         setIsAutopilotEnabled(true);
@@ -180,15 +209,9 @@ export default function FlowDesignerGame() {
                           setUiState(prev => ({ ...prev, status: 'playing' }));
                         }, 100);
                       }}
-                      className="bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-black py-2 px-6 rounded-lg border-2 border-emerald-800 shadow-md active:translate-y-0.5 transition-all text-sm flex items-center gap-2 cursor-pointer"
+                      className="mt-2.5 w-full bg-gradient-to-b from-[#368ABF] to-[#1462A6] hover:from-[#4aa1d5] hover:to-[#0f4f85] text-white font-black py-2 rounded-lg border border-[#0d4273] shadow-sm text-xs cursor-pointer transition-all active:translate-y-0.5 flex flex-row-reverse items-center gap-1.5 justify-center"
                     >
-                      <Bot size={16} /> הפעל טייס אוטומטי ונסה שוב! ✨
-                    </button>
-                    <button
-                      onClick={resetGame}
-                      className="bg-gradient-to-b from-stone-500 to-stone-700 hover:from-stone-400 hover:to-stone-600 text-[#f5ebd9] font-bold py-2 px-6 rounded-lg border-2 border-stone-800 shadow-md active:translate-y-0.5 transition-all text-sm cursor-pointer"
-                    >
-                      נסה שוב בעצמך
+                      <Bot size={12} /> הפעל טייס אוטומטי ונסה שוב!
                     </button>
                   </div>
                 </div>
@@ -196,34 +219,48 @@ export default function FlowDesignerGame() {
             )}
           </div>
 
-          <div className="p-4 bg-[#2a160a]/90 flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row gap-4 items-stretch bg-[#2a160a] p-3 rounded-xl border border-[#4a2815] shadow-inner">
+          <div
+            className="p-5 flex flex-col gap-4 border-t-[4px] border-[#1462A6] bg-[#FEFCF8]"
+          >
+            <div className="flex flex-col md:flex-row gap-4 items-stretch bg-[#FDFCF8]/50 p-3 rounded-xl border border-[#368ABF]/20 shadow-inner backdrop-blur-sm">
               <div className="w-full md:w-2/3">
                 <Controls speed={speed} onSpeedChange={setSpeed} disabled={uiState.status !== 'playing'} />
               </div>
-              <div className="w-full md:w-1/3 flex border-t md:border-t-0 md:border-r border-[#4a2815]/50 pt-3 md:pt-0 md:pr-4">
+              <div className="w-full md:w-1/3 flex border-t md:border-t-0 md:border-r border-[#368ABF]/20 pt-3 md:pt-0 md:pr-4">
                 <SkillProgress skill={uiState.skill} />
               </div>
             </div>
 
-            <div className="flex justify-center gap-4 pt-3 border-t border-[#4a2815]/50">
-              <button onClick={() => setIsPlaying(!isPlaying)} disabled={uiState.status !== 'playing'} className={`flex items-center justify-center gap-2 py-3 px-8 rounded-lg font-bold text-white transition-all outline-none ${isPlaying ? 'bg-gradient-to-b from-[#b45309] to-[#78350f] border-2 border-[#451a03] shadow-[0_4px_0_#451a03] active:shadow-none active:translate-y-1' : 'bg-gradient-to-b from-[#f59e0b] to-[#d97706] border-2 border-[#78350f] shadow-[0_5px_0_#78350f] active:shadow-none active:translate-y-1 disabled:opacity-50 disabled:translate-y-1 disabled:shadow-none'}`}>
-                {isPlaying ? <Pause size={18} className="drop-shadow-md" /> : <Play size={18} className="drop-shadow-md" />}
-                <span className="drop-shadow-md text-base">{isPlaying ? 'השהה' : 'התחל מסע'}</span>
+            <div className="flex justify-center gap-4 pt-3 border-t border-[#1462A6]/20">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                disabled={uiState.status !== 'playing'}
+                className={`flex flex-row-reverse items-center justify-center gap-2 py-3 px-8 rounded-xl font-black text-white transition-all outline-none active:translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isPlaying
+                    ? 'bg-gradient-to-b from-[#E69881] to-[#BF3F4A] border-2 border-[#751d24] shadow-[0_4px_0_#751d24] active:shadow-none'
+                    : 'bg-gradient-to-b from-[#368ABF] to-[#1462A6] border-2 border-[#0d4273] shadow-[0_4px_0_#0d4273] active:shadow-none'
+                }`}
+              >
+                {isPlaying ? <Pause size={18} className="drop-shadow-sm" /> : <Play size={18} className="drop-shadow-sm" />}
+                <span className="drop-shadow-sm text-base">{isPlaying ? 'השהה' : 'התחל מסע'}</span>
               </button>
-              <button onClick={resetGame} className="flex items-center justify-center py-3 px-4 rounded-lg font-bold text-[#f5ebd9] bg-gradient-to-b from-[#4a2815] to-[#30180a] border-2 border-[#1a0c05] hover:from-[#5d3a21] hover:to-[#3e1f0f] transition-all shadow-[0_5px_0_#1a0c05] active:shadow-none active:translate-y-1" title="איפוס המשחק">
+              <button
+                onClick={resetGame}
+                className="flex items-center justify-center py-3 px-5 rounded-xl font-black text-[#1462A6] bg-gradient-to-b from-[#FEFCF8] to-[#DEE4E4] border-2 border-[#b5bebe] hover:from-[#fff] hover:to-[#cfd7d7] transition-all shadow-[0_4px_0_#b5bebe] active:shadow-none active:translate-y-0.5 cursor-pointer"
+                title="איפוס המשחק"
+              >
                 <RotateCcw size={18} />
               </button>
               <button
                 onClick={handleAutopilotToggle}
-                className={`flex items-center justify-center gap-2 py-3 px-5 rounded-lg font-bold transition-all border-2 shadow-[0_5px_0_rgba(0,0,0,0.3)] active:shadow-none active:translate-y-1 ${
+                className={`flex flex-row-reverse items-center justify-center gap-2 py-3 px-6 rounded-xl font-black transition-all border-2 active:translate-y-0.5 cursor-pointer ${
                   isAutopilotEnabled
-                    ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white border-emerald-700 shadow-[0_4px_0_#0f766e]'
-                    : 'bg-gradient-to-b from-[#4a2815] to-[#30180a] text-[#f5ebd9] border-[#1a0c05] hover:from-[#5d3a21] hover:to-[#3e1f0f]'
+                    ? 'bg-gradient-to-b from-[#368ABF] to-[#1462A6] text-white border-[#0d4273] shadow-[0_4px_0_#0d4273] active:shadow-none'
+                    : 'bg-gradient-to-b from-[#F2DC99] to-[#F2CA99] text-[#241819] border-[#c4a868] hover:from-[#faeac1] hover:to-[#fadbb5] shadow-[0_4px_0_#c4a868] active:shadow-none'
                 }`}
                 title={isAutopilotEnabled ? 'כבה טייס אוטומטי' : 'הפעל טייס אוטומטי'}
               >
-                <Bot size={18} className={isAutopilotEnabled ? 'animate-bounce text-emerald-200' : 'text-amber-400'} />
+                <Bot size={18} className={isAutopilotEnabled ? 'animate-bounce text-[#FEFCF8]' : 'text-[#1462A6]'} />
                 <span className="text-base">{isAutopilotEnabled ? 'טייס אוטומטי פעיל' : 'הפעל טייס אוטומטי'}</span>
               </button>
             </div>
@@ -234,29 +271,34 @@ export default function FlowDesignerGame() {
       {/* First-time Confirmation Modal */}
       {showFirstTimeConfirm && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
-          <div className="bg-[#f4e4c1] border-4 border-[#bca07c] rounded-xl p-6 max-w-md w-full text-center shadow-2xl animate-fade-in" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)' }}>
-            <h3 className="text-2xl font-black text-[#264f73] mb-3 flex justify-center items-center gap-2">
-              <Bot size={28} /> הפעלת טייס אוטומטי?
-            </h3>
-            <p className="text-[#5c3a21] font-bold text-sm mb-5 leading-relaxed">
-              האם אתה בטוח שברצונך להשתמש בטייס האוטומטי? שימוש בו עלול לפגוע בחוויית המשחק ובאתגר האישי של למידת האיזון בעצמך.
-            </p>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => {
-                  setIsAutopilotEnabled(true);
-                  setShowFirstTimeConfirm(false);
-                }}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-5 rounded-lg border-2 border-emerald-800 transition-all text-sm cursor-pointer shadow-sm"
-              >
-                כן, הפעל טייס אוטומטי
-              </button>
-              <button
-                onClick={() => setShowFirstTimeConfirm(false)}
-                className="bg-stone-500 hover:bg-stone-600 text-white font-bold py-2 px-5 rounded-lg border-2 border-stone-700 transition-all text-sm cursor-pointer shadow-sm"
-              >
-                לא, אשחק בעצמי
-              </button>
+          <div
+            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-md w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
+          >
+            <div className="absolute inset-0 bg-[#FDFCF8]/10 pointer-events-none" />
+            <div className="relative z-10 w-full">
+              <h3 className="text-2xl font-black text-[#1462A6] mb-3 flex justify-center items-center gap-2 font-aloja">
+                <Bot size={28} className="animate-bounce" /> הפעלת טייס אוטומטי?
+              </h3>
+              <p className="text-[#241819] font-black text-sm mb-5 leading-relaxed bg-[#FDFCF8]/40 p-3 rounded-lg border border-[#368ABF]/10 text-right">
+                האם אתה בטוח שברצונך להשתמש בטייס האוטומטי? שימוש בו עלול לפגוע בחוויית המשחק ובאתגר האישי של למידת האיזון בעצמך.
+              </p>
+              <div className="flex flex-row-reverse gap-3 justify-center">
+                <button
+                  onClick={() => {
+                    setIsAutopilotEnabled(true);
+                    setShowFirstTimeConfirm(false);
+                  }}
+                  className="bg-gradient-to-b from-[#368ABF] to-[#1462A6] hover:from-[#4aa1d5] hover:to-[#0f4f85] text-white font-black py-2 px-5 rounded-lg border border-[#0d4273] transition-all text-sm cursor-pointer shadow-sm"
+                >
+                  כן, הפעל טייס אוטומטי
+                </button>
+                <button
+                  onClick={() => setShowFirstTimeConfirm(false)}
+                  className="bg-gradient-to-b from-[#FEFCF8] to-[#DEE4E4] hover:from-[#fff] hover:to-[#cfd7d7] text-[#241819] font-black py-2 px-5 rounded-lg border border-[#b5bebe] transition-all text-sm cursor-pointer shadow-sm"
+                >
+                  לא, אשחק בעצמי
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -265,25 +307,30 @@ export default function FlowDesignerGame() {
       {/* Failed-Before Educational Suggestion Modal */}
       {showFailedSuggest && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
-          <div className="bg-[#f4e4c1] border-4 border-[#bca07c] rounded-xl p-6 max-w-lg w-full text-center shadow-2xl animate-fade-in" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)' }}>
-            <h3 className="text-2xl font-black text-emerald-800 mb-3 flex justify-center items-center gap-2">
-              <Bot size={28} className="text-emerald-700" /> המלצה מנצחת לטייס האוטומטי! 💡
-            </h3>
-            <p className="text-[#5c3a21] font-bold text-sm mb-5 leading-relaxed">
-              טייס אוטומטי מופעל כעת! 
-              <br />
-              במצב זה הפיראט יבצע את הקפיצות בעצמו, מה שיאפשר לך <b>להתרכז במאה אחוז בשינוי סליידר המהירות</b> (מד זרימת המים) על מנת ללמוד כיצד להתאים את רמת הקושי בדיוק לרמת התלמידים שלך או לרמה האישית שלך!
-            </p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => {
-                  setIsAutopilotEnabled(true);
-                  setShowFailedSuggest(false);
-                }}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-8 rounded-lg border-2 border-emerald-800 transition-all text-base shadow-md cursor-pointer"
-              >
-                הבנתי, הפעל טייס אוטומטי ונתחיל! 🚀
-              </button>
+          <div
+            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-lg w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
+          >
+            <div className="absolute inset-0 bg-[#FDFCF8]/10 pointer-events-none" />
+            <div className="relative z-10 w-full">
+              <h3 className="text-2xl font-black text-[#1462A6] mb-3 flex justify-center items-center gap-2 font-aloja">
+                <Bot size={28} className="text-[#1462A6] animate-bounce" /> המלצה מנצחת לטייס האוטומטי! 💡
+              </h3>
+              <p className="text-[#241819] font-black text-sm mb-5 leading-relaxed bg-[#FDFCF8]/40 p-4 rounded-lg border border-[#368ABF]/10 text-right">
+                טייס אוטומטי מופעל כעת!
+                <br />
+                במצב זה הפיראט יבצע את הקפיצות בעצמו, מה שיאפשר לך <b className="text-[#1462A6]">להתרכז במאה אחוז בשינוי סליידר המהירות</b> (מד זרימת המים) על מנת ללמוד כיצד להתאים את רמת הקושי בדיוק לרמת התלמידים שלך או לרמה האישית שלך!
+              </p>
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    setIsAutopilotEnabled(true);
+                    setShowFailedSuggest(false);
+                  }}
+                  className="bg-gradient-to-b from-[#368ABF] to-[#1462A6] hover:from-[#4aa1d5] hover:to-[#0f4f85] text-white font-black py-2.5 px-8 rounded-xl border border-[#0d4273] transition-all text-base shadow-md cursor-pointer"
+                >
+                  הבנתי, הפעל טייס אוטומטי ונתחיל! 🚀
+                </button>
+              </div>
             </div>
           </div>
         </div>

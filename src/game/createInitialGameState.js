@@ -22,5 +22,6 @@ export function createInitialGameState() {
     framesOutsideFlow: 0,
     forceSafePlatform: false,
     isAutopilotEnabled: false,
+    framesSinceLastJump: Infinity,
   };
 }

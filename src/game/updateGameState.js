@@ -2,6 +2,7 @@ import { FLOW_WIN_SECONDS, BAD_FAIL_SECONDS, LEARNING_BONUS } from './constants.
 
 export function updateGameState({ game, gaps, speed, emotion, challenge, canvasWidth }) {
   game.frame++;
+  game.framesSinceLastJump = (game.framesSinceLastJump ?? Infinity) + 1;
 
   let effectiveSpeed = speed;
   if (game.npc && game.npc.recoveryTimer > 0) {
@@ -22,6 +23,7 @@ export function updateGameState({ game, gaps, speed, emotion, challenge, canvasW
       if (distanceToEnd <= jumpThreshold) {
         game.npc.vy = -12;
         game.npc.isJumping = true;
+        game.framesSinceLastJump = 0;
       }
     }
   }
@@ -94,8 +96,10 @@ export function updateGameState({ game, gaps, speed, emotion, challenge, canvasW
     game.falls.push(Date.now());
     game.splashes.push({ x: game.npc.x, y: 190, radius: 5, alpha: 1 });
 
-    // Positive reinforcement instead of penalty, and trigger safety scaffolding.
-    game.skill = Math.min(100, game.skill + LEARNING_BONUS);
+    // Reward learning only if the player actually attempted a jump recently.
+    if ((game.framesSinceLastJump ?? Infinity) <= 180) {
+      game.skill = Math.min(100, game.skill + LEARNING_BONUS);
+    }
     game.forceSafePlatform = true;
     game.flowFrames = Math.max(0, game.flowFrames - 60);
 

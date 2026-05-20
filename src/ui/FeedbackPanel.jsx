@@ -14,7 +14,7 @@ export function FeedbackPanel({ emotion }) {
   const config = getEmotionConfig();
   
   return (
-    <div className="flex items-center gap-4 w-fit min-w-[280px] bg-[#f4e4c1]/60 border border-[#bca07c] rounded-lg p-3 shadow-md backdrop-blur-md">
+    <div className="flex flex-row-reverse items-center gap-4 w-fit min-w-[280px] bg-[#f4e4c1]/60 border border-[#bca07c] rounded-lg p-3 shadow-md backdrop-blur-md text-right" dir="rtl">
       <div className="bg-[#1a0c05] p-2 rounded-lg border border-[#4a2815] shadow-inner">{config.icon}</div>
       <div>
         <span className={`font-black text-2xl block ${config.color} font-serif [text-shadow:_0_2px_4px_rgb(0_0_0_/_80%)]`}>{config.text}</span>
