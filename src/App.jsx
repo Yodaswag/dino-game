@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw } from 'lucide-react';
+import { Play, Pause, RotateCcw, Bot } from 'lucide-react';
 import { createInitialGameState } from './game/createInitialGameState.js';
 import { useGameLoop } from './hooks/useGameLoop.js';
 import { ASSETS } from './config/assets.js';
@@ -89,6 +89,18 @@ export default function FlowDesignerGame() {
     }
   };
 
+  const handleAutopilotToggle = () => {
+    if (isAutopilotEnabled) {
+      setIsAutopilotEnabled(false);
+    } else {
+      if (hasFailedBefore) {
+        setShowFailedSuggest(true);
+      } else {
+        setShowFirstTimeConfirm(true);
+      }
+    }
+  };
+
   const flowProgress = Math.min(100, (uiState.flowTime / 20) * 100);
   const badProgress = Math.min(100, (uiState.badTime / 7) * 100);
 
@@ -170,10 +182,80 @@ export default function FlowDesignerGame() {
               <button onClick={resetGame} className="flex items-center justify-center py-3 px-4 rounded-lg font-bold text-[#f5ebd9] bg-gradient-to-b from-[#4a2815] to-[#30180a] border-2 border-[#1a0c05] hover:from-[#5d3a21] hover:to-[#3e1f0f] transition-all shadow-[0_5px_0_#1a0c05] active:shadow-none active:translate-y-1" title="איפוס המשחק">
                 <RotateCcw size={18} />
               </button>
+              <button
+                onClick={handleAutopilotToggle}
+                className={`flex items-center justify-center gap-2 py-3 px-5 rounded-lg font-bold transition-all border-2 shadow-[0_5px_0_rgba(0,0,0,0.3)] active:shadow-none active:translate-y-1 ${
+                  isAutopilotEnabled
+                    ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white border-emerald-700 shadow-[0_4px_0_#0f766e]'
+                    : 'bg-gradient-to-b from-[#4a2815] to-[#30180a] text-[#f5ebd9] border-[#1a0c05] hover:from-[#5d3a21] hover:to-[#3e1f0f]'
+                }`}
+                title={isAutopilotEnabled ? 'כבה טייס אוטומטי' : 'הפעל טייס אוטומטי'}
+              >
+                <Bot size={18} className={isAutopilotEnabled ? 'animate-bounce text-emerald-200' : 'text-amber-400'} />
+                <span className="text-base">{isAutopilotEnabled ? 'טייס אוטומטי פעיל' : 'הפעל טייס אוטומטי'}</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* First-time Confirmation Modal */}
+      {showFirstTimeConfirm && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
+          <div className="bg-[#f4e4c1] border-4 border-[#bca07c] rounded-xl p-6 max-w-md w-full text-center shadow-2xl animate-fade-in" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)' }}>
+            <h3 className="text-2xl font-black text-[#264f73] mb-3 flex justify-center items-center gap-2">
+              <Bot size={28} /> הפעלת טייס אוטומטי?
+            </h3>
+            <p className="text-[#5c3a21] font-bold text-sm mb-5 leading-relaxed">
+              האם אתה בטוח שברצונך להשתמש בטייס האוטומטי? שימוש בו עלול לפגוע בחוויית המשחק ובאתגר האישי של למידת האיזון בעצמך.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => {
+                  setIsAutopilotEnabled(true);
+                  setShowFirstTimeConfirm(false);
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-5 rounded-lg border-2 border-emerald-800 transition-all text-sm cursor-pointer shadow-sm"
+              >
+                כן, הפעל טייס אוטומטי
+              </button>
+              <button
+                onClick={() => setShowFirstTimeConfirm(false)}
+                className="bg-stone-500 hover:bg-stone-600 text-white font-bold py-2 px-5 rounded-lg border-2 border-stone-700 transition-all text-sm cursor-pointer shadow-sm"
+              >
+                לא, אשחק בעצמי
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Failed-Before Educational Suggestion Modal */}
+      {showFailedSuggest && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
+          <div className="bg-[#f4e4c1] border-4 border-[#bca07c] rounded-xl p-6 max-w-lg w-full text-center shadow-2xl animate-fade-in" style={{ background: 'radial-gradient(circle at center, #f3e5ab 0%, #dfc38f 100%)' }}>
+            <h3 className="text-2xl font-black text-emerald-800 mb-3 flex justify-center items-center gap-2">
+              <Bot size={28} className="text-emerald-700" /> המלצה מנצחת לטייס האוטומטי! 💡
+            </h3>
+            <p className="text-[#5c3a21] font-bold text-sm mb-5 leading-relaxed">
+              טייס אוטומטי מופעל כעת! 
+              <br />
+              במצב זה הפיראט יבצע את הקפיצות בעצמו, מה שיאפשר לך <b>להתרכז במאה אחוז בשינוי סליידר המהירות</b> (מד זרימת המים) על מנת ללמוד כיצד להתאים את רמת הקושי בדיוק לרמת התלמידים שלך או לרמה האישית שלך!
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  setIsAutopilotEnabled(true);
+                  setShowFailedSuggest(false);
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-8 rounded-lg border-2 border-emerald-800 transition-all text-base shadow-md cursor-pointer"
+              >
+                הבנתי, הפעל טייס אוטומטי ונתחיל! 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
