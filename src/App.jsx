@@ -7,6 +7,7 @@ import { loadAssets } from './rendering/loadAssets.js';
 import { Controls } from './ui/Controls.jsx';
 import { SkillProgress } from './ui/SkillProgress.jsx';
 import { OnboardingModal } from './ui/OnboardingModal.jsx';
+import { getHasFailedBefore, setHasFailedBefore } from './game/localStorageUtils.js';
 
 export default function FlowDesignerGame() {
   const canvasRef = useRef(null);
@@ -14,6 +15,11 @@ export default function FlowDesignerGame() {
   const [speed, setSpeed] = useState(2);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [assets, setAssets] = useState(null);
+
+  const [hasFailedBefore, setLocalHasFailedBefore] = useState(() => getHasFailedBefore());
+  const [isAutopilotEnabled, setIsAutopilotEnabled] = useState(false);
+  const [showFirstTimeConfirm, setShowFirstTimeConfirm] = useState(false);
+  const [showFailedSuggest, setShowFailedSuggest] = useState(false);
 
   const [uiState, setUiState] = useState({
     skill: 20,
@@ -26,6 +32,17 @@ export default function FlowDesignerGame() {
 
   const game = useRef(createInitialGameState());
   const gaps = speed;
+
+  useEffect(() => {
+    game.current.isAutopilotEnabled = isAutopilotEnabled;
+  }, [isAutopilotEnabled]);
+
+  useEffect(() => {
+    if (uiState.status === 'failed') {
+      setHasFailedBefore();
+      setLocalHasFailedBefore(true);
+    }
+  }, [uiState.status]);
 
   useEffect(() => {
     loadAssets(ASSETS).then((loaded) => {
@@ -59,7 +76,9 @@ export default function FlowDesignerGame() {
 
   const resetGame = () => {
     setIsPlaying(false);
-    game.current = createInitialGameState();
+    const newState = createInitialGameState();
+    newState.isAutopilotEnabled = isAutopilotEnabled; // preserve autopilot on reset
+    game.current = newState;
     setSpeed(2);
     setUiState({ skill: 20, challenge: 20, emotion: 'flow', flowTime: 0, badTime: 0, status: 'onboarding' });
 

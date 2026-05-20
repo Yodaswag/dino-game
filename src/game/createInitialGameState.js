@@ -21,5 +21,6 @@ export function createInitialGameState() {
     stableSuccessSeconds: 0,
     framesOutsideFlow: 0,
     forceSafePlatform: false,
+    isAutopilotEnabled: false,
   };
 }
