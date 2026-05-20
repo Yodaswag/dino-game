@@ -150,15 +150,47 @@ export default function FlowDesignerGame() {
               </div>
             )}
             {uiState.status === 'failed' && (
-              <div className="absolute inset-0 bg-[#2a160a]/95 flex flex-col items-center justify-center p-4 text-center z-30 border-t-4 border-red-900">
+              <div className="absolute inset-0 bg-[#2a160a]/95 flex flex-col items-center justify-center p-4 text-center z-30 border-t-4 border-red-900 overflow-y-auto">
                 <div className="text-6xl mb-3 drop-shadow-lg opacity-80">⚓</div>
                 <h2 className="text-3xl font-black text-red-500 mb-2 drop-shadow-md">הפיראט נטש את המסע</h2>
-                <p className="text-[#d4a373] font-medium mb-4 text-base">השחקן שהה יותר מדי זמן בתחושת אי-נוחות.</p>
-                <div className="bg-[#1a0c05] p-4 rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.5)] max-w-xl text-right border-r-4 border-red-600">
+                <p className="text-[#d4a373] font-medium mb-4 text-base font-bold">השחקן שהה יותר מדי זמן בתחושת אי-נוחות (שעמום או תסכול).</p>
+                <div className="bg-[#1a0c05] p-4 rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.5)] max-w-xl text-right border-r-4 border-red-600 mb-4">
                   <h3 className="font-bold text-red-400 mb-2 text-lg">תובנה למורים:</h3>
                   <p className="text-sm text-[#eaddcf] leading-relaxed">
                     כאשר הלומד מתוסכל או משועמם לאורך זמן, הוא ינטוש את הלמידה. תפקידנו הוא לספק <b>תמיכה (Scaffolding)</b> או <b>העשרה</b> בהתאם.
                   </p>
+                </div>
+
+                <div className="mt-2 bg-[#3e1f0f] border-2 border-amber-600/50 p-4 rounded-lg shadow-inner max-w-xl text-center flex flex-col items-center gap-3">
+                  <div className="flex items-center gap-2 text-amber-300 font-bold text-base">
+                    <Bot size={22} className="animate-pulse" />
+                    <span>צריכים עזרה במסע? סיוע בטייס אוטומטי! 🤖</span>
+                  </div>
+                  <p className="text-xs text-[#eaddcf] leading-relaxed max-w-md">
+                    כדי להקל על ההתנסות ולמנוע תסכול או שעמום, אנו מציעים להפעיל את הטייס האוטומטי. הדבר יאפשר לכם להתרכז בכיוונון הסליידר (מהירות זרימת המים) כדי להתאים את רמת הקושי בדיוק לרמה שלכם או של התלמידים שלכם.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setIsAutopilotEnabled(true);
+                        resetGame();
+                        setTimeout(() => {
+                          setIsPlaying(true);
+                          game.current.status = 'playing';
+                          setUiState(prev => ({ ...prev, status: 'playing' }));
+                        }, 100);
+                      }}
+                      className="bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-black py-2 px-6 rounded-lg border-2 border-emerald-800 shadow-md active:translate-y-0.5 transition-all text-sm flex items-center gap-2 cursor-pointer"
+                    >
+                      <Bot size={16} /> הפעל טייס אוטומטי ונסה שוב! ✨
+                    </button>
+                    <button
+                      onClick={resetGame}
+                      className="bg-gradient-to-b from-stone-500 to-stone-700 hover:from-stone-400 hover:to-stone-600 text-[#f5ebd9] font-bold py-2 px-6 rounded-lg border-2 border-stone-800 shadow-md active:translate-y-0.5 transition-all text-sm cursor-pointer"
+                    >
+                      נסה שוב בעצמך
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
