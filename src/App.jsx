@@ -121,7 +121,7 @@ export default function FlowDesignerGame() {
       }}
     >
       <div className="max-w-[780px] mx-auto">
-        <div className="rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-[6px] border-[#1462A6] overflow-hidden mb-4 relative bg-[#241819] transition-all">
+        <div className="rounded-2xl border-[6px] border-[#1462A6] overflow-hidden mb-4 relative bg-[#241819] transition-all">
           <div
             className="p-4 border-b-[4px] border-[#1462A6] flex flex-col gap-2 bg-[#FEFCF8]"
           >
@@ -272,7 +272,7 @@ export default function FlowDesignerGame() {
       {showFirstTimeConfirm && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
           <div
-            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-md w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
+            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-md w-full text-center animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
           >
             <div className="absolute inset-0 bg-[#FDFCF8]/10 pointer-events-none" />
             <div className="relative z-10 w-full">
@@ -308,7 +308,7 @@ export default function FlowDesignerGame() {
       {showFailedSuggest && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" dir="rtl">
           <div
-            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-lg w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)] animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
+            className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-lg w-full text-center animate-fade-in relative overflow-hidden bg-[#FEFCF8]"
           >
             <div className="absolute inset-0 bg-[#FDFCF8]/10 pointer-events-none" />
             <div className="relative z-10 w-full">

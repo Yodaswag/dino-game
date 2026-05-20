@@ -5,7 +5,7 @@ export function OnboardingModal({ onStart }) {
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-3 animate-fade-in" dir="rtl">
       <div
-        className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-xl w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.9)] relative overflow-hidden"
+        className="border-[6px] border-[#1462A6] rounded-2xl p-6 max-w-xl w-full text-center relative overflow-hidden"
         style={{
           backgroundColor: '#FEFCF8'
         }}
@@ -16,9 +16,9 @@ export function OnboardingModal({ onStart }) {
         <div className="relative z-10 text-center w-full">
           <h1
             className="text-4xl font-black flex justify-center items-center gap-3 mb-5 tracking-wide drop-shadow-sm font-aloja"
-            style={{ color: '#1462A6' }}
+            style={{ color: '#264f73' }}
           >
-            <Anchor className="text-[#1462A6] animate-bounce" size={32} /> THE FLOWING TIDE
+            <Anchor className="animate-bounce" size={32} style={{ color: '#264f73' }} /> JUMP TO THE SHIP
           </h1>
 
           <div className="text-[#241819] mb-6 text-base font-black flex flex-col items-stretch text-right gap-4 bg-[#FDFCF8]/60 p-5 rounded-xl border border-[#368ABF]/30 backdrop-blur-sm shadow-inner">

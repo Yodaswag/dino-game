@@ -6,7 +6,7 @@ export function calculateChallenge({ gaps, speed }) {
 
 export function calculateSkillGrowthRate({ framesOutsideFlow, framesSinceLastJump = 0 }) {
   // No passive growth without recent player input — idling can't progress.
-  if (framesSinceLastJump > 180) return 0;
+  if (framesSinceLastJump > 60) return 0;
   const intervalFrames = DECREMENT_INTERVAL_SECONDS * 60;
   const intervals = Math.floor(framesOutsideFlow / intervalFrames);
   const growthRate = BASE_GROWTH_RATE - (intervals * RATE_DECREMENT);
@@ -16,7 +16,7 @@ export function calculateSkillGrowthRate({ framesOutsideFlow, framesSinceLastJum
 // Will be expanded in Task 4
 export function classifyEmotion({ delta, recentFalls = 0, stableSuccessSeconds = 0, framesSinceLastJump = 0 }) {
   if (delta >= 15 || (delta >= 8 && recentFalls >= 2)) return 'frustrated';
-  if (framesSinceLastJump > 240) return 'bored';
+  if (framesSinceLastJump > 90) return 'bored';
   if (delta <= -15 && stableSuccessSeconds >= 3) return 'bored';
   return 'flow';
 }
