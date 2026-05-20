@@ -18,7 +18,7 @@ export function OnboardingModal({ onStart }) {
             className="text-4xl font-black flex justify-center items-center gap-3 mb-5 tracking-wide drop-shadow-sm font-aloja"
             style={{ color: '#264f73' }}
           >
-            <Anchor className="animate-bounce" size={32} style={{ color: '#264f73' }} /> JUMP TO THE SHIP
+            <Anchor className="animate-bounce" size={32} style={{ color: '#264f73' }} /> Jump To The Ship
           </h1>
 
           <div className="text-[#241819] mb-6 text-base font-black flex flex-col items-stretch text-right gap-4 bg-[#FDFCF8]/60 p-5 rounded-xl border border-[#368ABF]/30 backdrop-blur-sm shadow-inner">
