@@ -51,9 +51,9 @@ export function OnboardingModal({ onStart }) {
 
           <button
             onClick={onStart}
-            className="bg-gradient-to-b from-[#E69881] to-[#BF3F4A] hover:from-[#f5aba2] hover:to-[#d0404b] text-[#FEFCF8] font-black py-3.5 px-10 rounded-xl shadow-[0_6px_0_#751d24] border-2 border-[#751d24] transition-all transform active:translate-y-1 active:shadow-none text-xl cursor-pointer"
+            className="bg-gradient-to-b from-[#4A9BD1] to-[#1462A6] hover:from-[#5BACE0] hover:to-[#1873BD] text-[#FEFCF8] font-black py-3.5 px-10 rounded-xl shadow-[0_6px_0_#0d3f6b] border-2 border-[#0d3f6b] transition-all transform active:translate-y-1 active:shadow-none text-xl cursor-pointer"
           >
-            התחל לשחק
+            להתחלה
           </button>
         </div>
       </div>
